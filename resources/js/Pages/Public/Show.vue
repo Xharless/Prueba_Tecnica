@@ -7,6 +7,8 @@ const props = defineProps({
 });
 
 const showingModal = ref(false);
+const showingSuccessModal = ref(false);
+const successAmount = ref(0);
 
 const form = useForm({
     amount: 1000,
@@ -17,10 +19,15 @@ const form = useForm({
 const submitSupport = () => {
     form.post(route('supports.store', props.user.id), {
         onSuccess: () => {
+            successAmount.value = form.amount;
             showingModal.value = false;
+            showingSuccessModal.value = true;
             form.reset();
-            const montoFormateado = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(form.amount);
-            alert(`¡Gracias por el café! ☕ (${montoFormateado} simulados guardados)`);
+            
+            
+            setTimeout(() => {
+                showingSuccessModal.value = false;
+            }, 4000);
         },
     });
 };
@@ -166,5 +173,91 @@ const formatCurrency = (value) => {
 
             </div>
         </div>
+
+        <!-- Modal de Éxito -->
+        <Teleport to="body" v-if="showingSuccessModal">
+            <div class="fixed inset-0 z-50 flex items-center justify-center px-4">
+                <div class="absolute inset-0 bg-black/60 backdrop-blur-sm animate-fadeIn"></div>
+                
+                <div class="relative bg-gradient-to-br from-[#0d1117] to-[#161b22] rounded-3xl shadow-2xl max-w-sm w-full p-8 overflow-hidden border border-gray-800 animate-slideUp">
+                    
+                    <!-- Decoración superior -->
+                    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-pink-500 via-rose-500 to-pink-500"></div>
+                    
+                    <!-- Confetti circles -->
+                    <div class="absolute top-4 left-4 w-3 h-3 bg-pink-500 rounded-full opacity-50"></div>
+                    <div class="absolute top-6 right-6 w-2 h-2 bg-rose-500 rounded-full opacity-50"></div>
+                    <div class="absolute bottom-8 left-6 w-2 h-2 bg-pink-500 rounded-full opacity-50"></div>
+                    <div class="absolute bottom-6 right-4 w-3 h-3 bg-rose-500 rounded-full opacity-50"></div>
+                    
+                    <div class="relative z-10 text-center">
+                        <!-- Emoji celebración -->
+                        <div class="text-6xl mb-4 animate-bounce">☕</div>
+                        
+                        <h2 class="text-3xl font-bold text-white mb-2">
+                            ¡Gracias por el café!
+                        </h2>
+                        
+                        <p class="text-gray-300 mb-6">
+                            Acabas de apoyar a <span class="font-semibold text-pink-400">{{ user.name }}</span>
+                        </p>
+                        
+                        <div class="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-4 mb-6 border border-gray-700">
+                            <p class="text-sm text-gray-400 mb-1">Monto donado</p>
+                            <p class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-500">
+                                {{ formatCurrency(successAmount) }}
+                            </p>
+                        </div>
+                        
+                        <p class="text-sm text-gray-400 leading-relaxed">
+                            Tu donación ha sido <span class="text-green-400 font-semibold">guardada correctamente</span>. El creador será notificado de tu apoyo. ❤️
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </Teleport>
     </div>
 </template>
+
+<style scoped>
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slideUp {
+    animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.animate-bounce {
+    animation: bounce 1s ease-in-out infinite;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+</style>

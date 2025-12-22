@@ -1,11 +1,11 @@
 <?php
 
+use App\Http\Controllers\LinkController; 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-// Ruta de Inicio: Carga la vista 'Welcome' de Vue
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -15,16 +15,17 @@ Route::get('/', function () {
     ]);
 });
 
-// Ruta del Dashboard: Solo accesible si estás logueado
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// Rutas de Perfil (Editar, Borrar cuenta)
 Route::middleware('auth')->group(function () {
+    // Rutas de Perfil
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/links', [LinkController::class, 'index'])->name('links.index');
+    Route::post('/links', [LinkController::class, 'store'])->name('links.store');
 });
 
 require __DIR__.'/auth.php';

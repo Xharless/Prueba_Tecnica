@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\LinkController; 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PublicProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\SupportController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -16,7 +18,11 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    $user = auth()->user();
+    $supports = $user->supports()->latest()->get();
+    return Inertia::render('Dashboard', [
+        'supports' => $supports
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -28,4 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/links', [LinkController::class, 'store'])->name('links.store');
 });
 
+Route::get('/@{username}', [PublicProfileController::class, 'show'])->name('public.profile');
+
+Route::post('/supports/{user}', [SupportController::class, 'store'])->name('supports.store');
 require __DIR__.'/auth.php';

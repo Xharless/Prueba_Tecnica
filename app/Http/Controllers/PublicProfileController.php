@@ -12,9 +12,9 @@ class PublicProfileController extends Controller
     {
         $user = User::where('username', $username)
                     ->with(['links' => function ($query) {
-                        $query->latest(); // Ordenar links recientes primero
+                        $query->latest(); 
                     }])
-                    ->firstOrFail(); // Si no existe, lanza error 404
+                    ->firstOrFail();
 
         return Inertia::render('Public/Show', [
             'user' => [

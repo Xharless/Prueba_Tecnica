@@ -5,14 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
-use App\Models\Link; // <--- FALTABA ESTO (Para que funcione "Link $link")
-use Illuminate\Support\Facades\Auth; // <--- FALTABA ESTO (Para usar "Auth::id()")
-
+use App\Models\Link; 
+use Illuminate\Support\Facades\Auth;
 class LinkController extends Controller
 {
     public function index(): Response
     {
-        return Inertia::render('Profile/Links', [ // Asegúrate que tu vista Vue esté aquí
+        return Inertia::render('Profile/Links', [ 
             'links' => auth()->user()->links()->latest()->get(),
             'status' => session('status'),
         ]);
@@ -32,7 +31,6 @@ class LinkController extends Controller
 
     public function edit(Link $link): Response
     {
-        // Seguridad: Verificar que el link es del usuario
         if ($link->user_id !== Auth::id()) {
             abort(403);
         }
@@ -44,7 +42,6 @@ class LinkController extends Controller
 
     public function update(Request $request, Link $link)
     {
-        // Seguridad: Verificar que el link es del usuario
         if ($link->user_id !== Auth::id()) {
             abort(403);
         }
@@ -56,8 +53,6 @@ class LinkController extends Controller
 
         $link->update($validated);
 
-        // Ojo: Usaste 'message' aquí, pero 'status' en store.
-        // Te recomiendo usar siempre el mismo nombre para que el frontend lo detecte fácil.
         return back()->with('status', 'Link actualizado correctamente'); 
     }
 

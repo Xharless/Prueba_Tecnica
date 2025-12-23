@@ -5,7 +5,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import { Link, useForm, usePage } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 // --- NUEVAS IMPORTACIONES PARA EL CROPPER ---
 import { Cropper, CircleStencil } from 'vue-advanced-cropper';
@@ -30,11 +30,28 @@ const form = useForm({
 // Variables para el manejo de imágenes
 const photoPreview = ref(null);
 const photoInput = ref(null);
+const showSuccess = ref(false);
+let successTimeout = null;
 
 // Variables para el Modal de Recorte
 const showCropModal = ref(false);
 const tempImageSrc = ref(null);
 const cropperRef = ref(null); // Referencia al componente Cropper
+
+// Observar cambios en recentlySuccessful
+watch(() => form.recentlySuccessful, (newVal) => {
+    if (newVal) {
+        showSuccess.value = true;
+        
+        // Limpiar timeout anterior si existe
+        if (successTimeout) clearTimeout(successTimeout);
+        
+        // Mostrar el mensaje por 5 segundos
+        successTimeout = setTimeout(() => {
+            showSuccess.value = false;
+        }, 5000);
+    }
+});
 
 // 1. Cuando el usuario selecciona un archivo
 const onFileChange = (e) => {
@@ -160,8 +177,15 @@ const selectNewPhoto = () => {
 
             <div class="flex items-center gap-4">
                 <PrimaryButton :disabled="form.processing">Guardar Cambios</PrimaryButton>
-                <Transition enter-active-class="transition ease-in-out" enter-from-class="opacity-0" leave-active-class="transition ease-in-out" leave-to-class="opacity-0">
-                    <p v-if="form.recentlySuccessful" class="text-sm text-gray-600 dark:text-gray-400">Guardado.</p>
+                <Transition enter-active-class="transition ease-in-out duration-300" enter-from-class="opacity-0 translate-y-2" leave-active-class="transition ease-in-out duration-300" leave-to-class="opacity-0 translate-y-2">
+                    <div v-if="showSuccess" class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 dark:border-emerald-700/30 rounded-lg backdrop-blur-sm">
+                        <svg class="h-5 w-5 text-emerald-600 dark:text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                        </svg>
+                        <p class="text-sm font-semibold text-emerald-700 dark:text-emerald-300">
+                            Perfil actualizado correctamente
+                        </p>
+                    </div>
                 </Transition>
             </div>
         </form>

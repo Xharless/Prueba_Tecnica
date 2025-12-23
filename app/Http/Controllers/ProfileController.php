@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -29,13 +30,34 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        
+        // 1. Llenamos los datos de texto (name, email, bio, username)
+        $user->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        // 2. Verificamos si subió una nueva foto (avatar)
+        if ($request->hasFile('avatar')) {
+            // Borramos la foto anterior si existe (para no llenar el servidor de basura)
+            if ($user->avatar) {
+                // Esto asume que guardaste la ruta completa tipo "/storage/avatars/..."
+                // Convertimos url a path relativo
+                $oldPath = str_replace('/storage/', '', $user->avatar); 
+                Storage::disk('public')->delete($oldPath);
+            }
+
+            // Guardamos la nueva foto en la carpeta 'avatars' dentro de 'public'
+            $path = $request->file('avatar')->store('avatars', 'public');
+            
+            // Guardamos la URL pública en la base de datos
+            $user->avatar = '/storage/' . $path;
         }
 
-        $request->user()->save();
+        // 3. Reseteamos verificación de email si lo cambió
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
 
         return Redirect::route('profile.edit');
     }

@@ -92,8 +92,7 @@ git --version
 
 ### 1. Clonar el Repositorio
 ```bash
-git clone https://github.com/tu-usuario/esponsor.git
-cd esponsor
+https://github.com/Xharless/Prueba_Tecnica.git
 ```
 
 ### 2. Instalar Dependencias PHP

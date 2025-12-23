@@ -1,23 +1,515 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🎨 eSponsor - Plataforma de Apoyos para Creadores
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Una plataforma moderna y completa tipo **Ko-fi / Patreon** que permite a creadores de contenido recibir apoyos simbólicos de sus seguidores. Desarrollada con **Laravel 12**, **Vue 3**, **Inertia.js** y **Tailwind CSS**.
 
-## About Laravel
+![Laravel](https://img.shields.io/badge/Laravel-12.0-FF2D20?style=for-the-badge&logo=laravel)
+![Vue](https://img.shields.io/badge/Vue-3.4-4FC08D?style=for-the-badge&logo=vue.js)
+![PHP](https://img.shields.io/badge/PHP-8.2-777BB4?style=for-the-badge&logo=php)
+![Tailwind](https://img.shields.io/badge/Tailwind-3.2-06B6D4?style=for-the-badge&logo=tailwindcss)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 📋 Tabla de Contenidos
+
+- [Características](#características)
+- [Requisitos Previos](#requisitos-previos)
+- [Instalación](#instalación)
+- [Configuración](#configuración)
+- [Base de Datos](#base-de-datos)
+- [Ejecución](#ejecución)
+- [Estructura del Proyecto](#estructura-del-proyecto)
+- [Uso de la Aplicación](#uso-de-la-aplicación)
+- [Stack Tecnológico](#stack-tecnológico)
+
+---
+
+## ✨ Características
+
+### 🔐 Autenticación y Seguridad
+- ✅ Registro e inicio de sesión con email y contraseña
+- ✅ Verificación de email integrada
+- ✅ Recuperación de contraseña
+- ✅ Cambio seguro de contraseña
+- ✅ Eliminación de cuenta con confirmación
+- ✅ Autorización basada en políticas
+
+### 👤 Gestión de Perfil
+- ✅ Edición de perfil (nombre, username, biografía, avatar)
+- ✅ Cropper circular avanzado para avatar
+- ✅ Compresión automática de imágenes (JPEG optimizado)
+- ✅ URL pública personalizada: `/@{username}`
+
+### 🔗 Gestor de Enlaces (Linktree)
+- ✅ Crear, editar y eliminar enlaces
+- ✅ CRUD completo con validaciones
+- ✅ Control de acceso basado en propietario
+- ✅ Listado ordenado por fecha de creación
+
+### 💰 Sistema de Apoyos
+- ✅ Modal elegante para enviar apoyos
+- ✅ Montos predefinidos (1000, 2000, 5000, 10000 CLP)
+- ✅ Mensaje personalizado opcional
+- ✅ Modal de éxito con animación
+- ✅ Historial de apoyos en dashboard
+
+### 📊 Dashboard Creador
+- ✅ Estadísticas financieras (total recaudado, apoyos recibidos)
+- ✅ Tabla de historial completo de donaciones
+- ✅ Información del supporter, mensaje, fecha y monto
+- ✅ Interfaz moderna y responsiva
+
+### 🎨 Diseño y UX
+- ✅ Tema oscuro/claro automático
+- ✅ Glassmorphism con efectos visuales
+- ✅ Gradientes y animaciones suaves
+- ✅ Totalmente responsive (móvil, tablet, desktop)
+- ✅ Landing page profesional con hero, features, testimonios y FAQ
+
+---
+
+## 🔧 Requisitos Previos
+
+Antes de instalar, asegúrate de tener:
+
+- **PHP 8.2** o superior
+- **Composer** (gestor de dependencias de PHP)
+- **Node.js 16+** y **npm** o **yarn**
+- **Git**
+- **SQLite** o **MySQL** (la app usa SQLite por defecto)
+
+### Verificar versiones instaladas:
+```bash
+php --version
+composer --version
+node --version
+npm --version
+git --version
+```
+
+---
+
+## 📦 Instalación
+
+### 1. Clonar el Repositorio
+```bash
+git clone https://github.com/tu-usuario/esponsor.git
+cd esponsor
+```
+
+### 2. Instalar Dependencias PHP
+```bash
+composer install
+```
+
+### 3. Instalar Dependencias JavaScript
+```bash
+npm install
+# o si prefieres yarn
+yarn install
+```
+
+### 4. Crear Archivo de Configuración
+```bash
+cp .env.example .env
+```
+
+---
+
+## ⚙️ Configuración
+
+### Configurar .env
+
+Abre el archivo `.env` y configura los siguientes valores:
+
+```env
+APP_NAME="eSponsor"
+APP_ENV=local
+APP_KEY=
+APP_DEBUG=true
+APP_URL=http://localhost:8000
+
+# Base de Datos (SQLite - Por defecto)
+DB_CONNECTION=sqlite
+DB_DATABASE=database/database.sqlite
+
+# O si prefieres MySQL:
+# DB_CONNECTION=mysql
+# DB_HOST=127.0.0.1
+# DB_PORT=3306
+# DB_DATABASE=esponsor
+# DB_USERNAME=root
+# DB_PASSWORD=
+
+# Correo (Usar Mailtrap para desarrollo)
+MAIL_MAILER=log
+MAIL_HOST=smtp.mailtrap.io
+MAIL_PORT=465
+MAIL_USERNAME=
+MAIL_PASSWORD=
+MAIL_FROM_ADDRESS=noreply@esponsor.local
+MAIL_FROM_NAME="eSponsor"
+```
+
+### Generar Clave de Aplicación
+```bash
+php artisan key:generate
+```
+
+### Crear base de datos SQLite (si es necesario)
+```bash
+touch database/database.sqlite
+```
+
+---
+
+## 🗄️ Base de Datos
+
+### Ejecutar Migraciones
+```bash
+php artisan migrate
+```
+
+### Crear Usuario de Prueba (Opcional)
+```bash
+php artisan tinker
+
+# En la consola interactiva:
+$user = User::factory()->create([
+    'name' => 'Juan Pérez',
+    'email' => 'juan@example.com',
+    'username' => 'juanperez',
+    'password' => bcrypt('password123'),
+]);
+```
+
+### Revertir Migraciones (si es necesario)
+```bash
+php artisan migrate:rollback
+```
+
+### Resetear Base de Datos Completamente
+```bash
+php artisan migrate:refresh --seed
+```
+
+---
+
+## 🚀 Ejecución
+
+### Opción 1: Ejecutar en Desarrollo (Recomendado)
+
+**Terminal 1 - Servidor Vite (Frontend)**
+```bash
+npm run dev
+```
+
+**Terminal 2 - Servidor Laravel (Backend)**
+```bash
+php artisan serve
+```
+
+Luego accede a:
+- 🌐 App: `http://localhost:8000`
+- 📦 Vite (HMR): `http://localhost:5173`
+
+### Opción 2: Buildear para Producción
+```bash
+npm run build
+php artisan serve
+```
+
+### Opción 3: Usando Laravel Sail (Docker)
+```bash
+./vendor/bin/sail up
+
+# En otra terminal:
+./vendor/bin/sail npm run dev
+```
+
+---
+
+## 📁 Estructura del Proyecto
+
+```
+esponsor/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   ├── Auth/
+│   │   │   ├── LinkController.php
+│   │   │   ├── ProfileController.php
+│   │   │   ├── PublicProfileController.php
+│   │   │   └── SupportController.php
+│   │   ├── Requests/
+│   │   │   └── ProfileUpdateRequest.php
+│   │   └── Middleware/
+│   ├── Models/
+│   │   ├── User.php
+│   │   ├── Link.php
+│   │   └── Support.php
+│   ├── Policies/
+│   │   └── LinkPolicy.php
+│   └── Providers/
+├── database/
+│   ├── migrations/
+│   ├── factories/
+│   └── seeders/
+├── resources/
+│   ├── js/
+│   │   ├── Pages/
+│   │   │   ├── Welcome.vue
+│   │   │   ├── Dashboard.vue
+│   │   │   ├── Show.vue
+│   │   │   ├── Profile/
+│   │   │   │   ├── Edit.vue
+│   │   │   │   ├── Links.vue
+│   │   │   │   └── Partials/
+│   │   │   └── Links/
+│   │   │       └── Edit.vue
+│   │   ├── Components/
+│   │   ├── Layouts/
+│   │   └── app.js
+│   └── css/
+│       └── app.css
+├── routes/
+│   ├── web.php
+│   ├── auth.php
+│   └── console.php
+├── tests/
+├── .env.example
+├── composer.json
+├── package.json
+├── tailwind.config.js
+├── vite.config.js
+└── README.md
+```
+
+---
+
+## 💻 Uso de la Aplicación
+
+### Para Creadores
+
+#### 1. Registro
+- Accede a `/register`
+- Completa el formulario con email y contraseña
+- Verifica tu email
+- ¡Tu cuenta está lista!
+
+#### 2. Configurar Perfil
+- Ve a `/profile`
+- Edita: nombre, username, biografía y avatar
+- Tu URL pública será: `/@{tu-username}`
+
+#### 3. Agregar Enlaces
+- Ve a `/links`
+- Crea nuevos enlaces (título + URL)
+- Edita o elimina enlaces existentes
+- Los enlaces aparecen en tu perfil público
+
+#### 4. Ver Apoyos
+- Ve a `/dashboard`
+- Ve tus estadísticas (total recaudado, apoyos recibidos)
+- Consulta el historial completo de donaciones
+
+### Para Seguidores
+
+#### 1. Ver Perfil Público
+- Accede a `/@{username-del-creador}`
+- Ve su avatar, nombre, biografía y enlaces
+
+#### 2. Enviar Apoyo
+- Haz clic en "Invítame un café"
+- Selecciona un monto (1000, 2000, 5000 o 10000)
+- Ingresa tu nombre y mensaje opcional
+- ¡Listo! Recibirás un mensaje de éxito
+
+---
+
+## 🏗️ Stack Tecnológico
+
+### Backend
+- **Laravel 12.43.1** - Framework PHP moderno
+- **PHP 8.2+** - Lenguaje server-side
+- **Laravel Breeze** - Sistema de autenticación
+- **SQLite/MySQL** - Base de datos
+
+### Frontend
+- **Vue 3.4** - Framework JavaScript reactivo
+- **Inertia.js 2.0** - Adapter server-side rendering
+- **Tailwind CSS 3.2** - Utilidades CSS
+- **Vue Advanced Cropper** - Cropper circular para imágenes
+
+### Herramientas
+- **Vite 7** - Build tool rápido
+- **npm/yarn** - Gestor de dependencias
+- **Composer** - Gestor de dependencias PHP
+- **Git** - Control de versiones
+
+---
+
+## 🔐 Características de Seguridad
+
+- ✅ Autenticación con Laravel Sanctum
+- ✅ CSRF protection en todos los formularios
+- ✅ Password hashing seguro (bcrypt)
+- ✅ Autorización basada en políticas (LinkPolicy)
+- ✅ Validación de entrada en backend
+- ✅ Compresión de imágenes para evitar almacenamiento excesivo
+- ✅ Rate limiting en rutas sensibles
+
+---
+
+## 📝 Variables de Entorno Importantes
+
+```env
+# Aplicación
+APP_NAME=eSponsor
+APP_DEBUG=true (false en producción)
+APP_URL=http://localhost:8000
+
+# Base de Datos
+DB_CONNECTION=sqlite
+DB_DATABASE=database/database.sqlite
+
+# Mail
+MAIL_MAILER=log (usar smtp en producción)
+MAIL_FROM_ADDRESS=noreply@esponsor.local
+
+# Session
+SESSION_DRIVER=cookie
+SESSION_LIFETIME=120
+```
+
+---
+
+## 🐛 Solucionar Problemas
+
+### Error: "No database found"
+```bash
+touch database/database.sqlite
+php artisan migrate
+```
+
+### Error: "npm modules not found"
+```bash
+rm -rf node_modules package-lock.json
+npm install
+```
+
+### Error: "APP_KEY not set"
+```bash
+php artisan key:generate
+```
+
+### Error: "Target class does not exist"
+```bash
+composer dump-autoload
+php artisan cache:clear
+```
+
+### Error: "Port 8000 already in use"
+```bash
+php artisan serve --port=8001
+```
+
+---
+
+## 📊 Modelos de Datos
+
+### User
+```
+- id: bigint
+- name: string
+- email: string (unique)
+- username: string (unique)
+- bio: text (nullable)
+- avatar: string (nullable)
+- email_verified_at: timestamp
+- password: string
+- timestamps
+```
+
+### Link
+```
+- id: bigint
+- user_id: bigint (FK)
+- title: string
+- url: string
+- timestamps
+```
+
+### Support
+```
+- id: bigint
+- user_id: bigint (FK) - creador
+- supporter_name: string
+- message: text (nullable)
+- amount: decimal
+- timestamps
+```
+
+---
+
+## 🚢 Despliegue en Producción
+
+### Preparar para Producción
+```bash
+# Buildear assets
+npm run build
+
+# Optimizar Laravel
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+
+# Cambiar a modo producción
+APP_DEBUG=false
+APP_ENV=production
+```
+
+### Opciones de Hosting
+- **Heroku** - Fácil despliegue (agregar Procfile)
+- **Railway** - Moderno y sencillo
+- **DigitalOcean** - Servidores asequibles
+- **Linode** - Buena relación precio/rendimiento
+
+---
+
+## 📚 Recursos Útiles
+
+- [Documentación Laravel](https://laravel.com/docs)
+- [Documentación Vue 3](https://vuejs.org)
+- [Documentación Inertia.js](https://inertiajs.com)
+- [Documentación Tailwind CSS](https://tailwindcss.com)
+
+---
+
+## 👥 Contribuir
+
+Las contribuciones son bienvenidas. Para cambios importantes:
+
+1. Fork el repositorio
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
+
+---
+
+## 📄 Licencia
+
+Este proyecto está bajo la licencia MIT.
+
+---
+
+## 👨‍💻 Autor
+
+Desarrollado como proyecto técnico de práctica - Desafío eSponsor 2025
+
+---
+
+**¡Gracias por usar eSponsor!** 🙏
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
 

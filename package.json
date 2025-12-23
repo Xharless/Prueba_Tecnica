@@ -21,6 +21,7 @@
         "vue": "^3.4.0"
     },
     "dependencies": {
+        "vue-advanced-cropper": "^2.8.9",
         "ziggy-js": "^2.6.0"
     }
 }

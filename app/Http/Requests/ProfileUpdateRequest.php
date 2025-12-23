@@ -40,7 +40,7 @@ class ProfileUpdateRequest extends FormRequest
             'avatar' => [
                 'nullable', 
                 'image', 
-                'max:2048'
+                'max:5120'
             ],
         ];
     }

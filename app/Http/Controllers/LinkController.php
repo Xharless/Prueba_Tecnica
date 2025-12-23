@@ -1,19 +1,18 @@
 <?php
 
-namespace App\Http\Controllers; // 1. Define la carpeta donde vive
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
-// La clase Controller base se importa automáticamente si estás en el mismo namespace,
-// pero si te da problemas, puedes descomentar la siguiente línea:
-// use App\Http\Controllers\Controller; 
+use App\Models\Link; // <--- FALTABA ESTO (Para que funcione "Link $link")
+use Illuminate\Support\Facades\Auth; // <--- FALTABA ESTO (Para usar "Auth::id()")
 
-class LinkController extends Controller // 2. Solo el nombre corto de la clase
+class LinkController extends Controller
 {
     public function index(): Response
     {
-        return Inertia::render('Profile/Links', [
+        return Inertia::render('Profile/Links', [ // Asegúrate que tu vista Vue esté aquí
             'links' => auth()->user()->links()->latest()->get(),
             'status' => session('status'),
         ]);
@@ -29,5 +28,47 @@ class LinkController extends Controller // 2. Solo el nombre corto de la clase
         $request->user()->links()->create($validated);
 
         return back()->with('status', '¡Enlace agregado con éxito!');
+    }
+
+    public function edit(Link $link): Response
+    {
+        // Seguridad: Verificar que el link es del usuario
+        if ($link->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        return Inertia::render('Links/Edit', [
+            'link' => $link,
+        ]);
+    }
+
+    public function update(Request $request, Link $link)
+    {
+        // Seguridad: Verificar que el link es del usuario
+        if ($link->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'url' => 'required|url',
+        ]);
+
+        $link->update($validated);
+
+        // Ojo: Usaste 'message' aquí, pero 'status' en store.
+        // Te recomiendo usar siempre el mismo nombre para que el frontend lo detecte fácil.
+        return back()->with('status', 'Link actualizado correctamente'); 
+    }
+
+    public function destroy(Link $link)
+    {
+        if ($link->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $link->delete();
+
+        return back()->with('status', 'Link eliminado');
     }
 }
